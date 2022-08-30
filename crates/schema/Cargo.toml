@@ -1,0 +1,12 @@
+[package]
+name = "noi-schema"
+version = "0.1.0"
+authors = ["frostornge <frostornge@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+noi-core = { path = "../../contracts/core" }
+noi-oracle = { path = "../../contracts/oracle" }
+noi-treasury = { path = "../../contracts/treasury" }
+
+cosmwasm-schema = "1.0.0"
