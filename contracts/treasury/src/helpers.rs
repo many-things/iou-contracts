@@ -10,12 +10,12 @@ use crate::{
     CosmosMsg,
 };
 
-/// SimpleMMTreasury is a wrapper around Addr that provides a lot of helpers
+/// NoiTreasury is a wrapper around Addr that provides a lot of helpers
 /// for working with this. Rename it to your contract name.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct SimpleMMTreasury(pub Addr);
+pub struct NoiTreasury(pub Addr);
 
-impl SimpleMMTreasury {
+impl NoiTreasury {
     pub fn addr(&self) -> Addr {
         self.0.clone()
     }
