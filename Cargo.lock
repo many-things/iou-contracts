@@ -420,6 +420,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8371e4e5341c3a96db127eb2465ac681ced4c433e01dd0e938adbef26ba93ba5"
 
 [[package]]
+name = "noi-alias"
+version = "0.1.0"
+dependencies = [
+ "cosmwasm-std",
+ "osmo-bindings-tokenfactory",
+]
+
+[[package]]
 name = "noi-core"
 version = "0.1.0"
 dependencies = [
@@ -470,6 +478,7 @@ dependencies = [
  "cw-storage-plus",
  "cw-utils",
  "cw2",
+ "noi-alias",
  "osmo-bindings-tokenfactory",
  "schemars",
  "serde",

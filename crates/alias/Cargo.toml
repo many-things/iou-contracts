@@ -1,0 +1,10 @@
+[package]
+name = "noi-alias"
+version = "0.1.0"
+authors = ["frostornge <frostornge@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+cosmwasm-std = "1.0.0"
+
+osmo-bindings-tokenfactory = "0.6.0-p0mvn-v1"

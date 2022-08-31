@@ -3,12 +3,13 @@ use cosmwasm_std::entry_point;
 use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, StdResult, Uint128};
 use osmo_bindings_tokenfactory::OsmosisMsg;
 
+use noi_alias::Response;
+
 use crate::error::ContractError;
 use crate::msg::{ConfigResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{Config, CONFIG};
-use crate::Response;
 
-const CONTRACT_NAME: &str = "crates.io:sample-mm-cdp";
+const CONTRACT_NAME: &str = "crates.io:noi-treasury";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 #[cfg_attr(not(feature = "library"), entry_point)]
