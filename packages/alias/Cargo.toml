@@ -7,4 +7,4 @@ edition = "2018"
 [dependencies]
 cosmwasm-std = "1.0.0"
 
-osmo-bindings-tokenfactory = "0.6.0-p0mvn-v1"
+osmo-bindings = { git="https://github.com/osmosis-labs/bindings", rev="9b9278f" }

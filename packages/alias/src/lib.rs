@@ -1,4 +1,4 @@
-use osmo_bindings_tokenfactory::{OsmosisMsg, OsmosisQuery};
+use osmo_bindings::{OsmosisMsg, OsmosisQuery};
 
 // Type aliases
 pub type Response = cosmwasm_std::Response<OsmosisMsg>;

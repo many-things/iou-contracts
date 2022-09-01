@@ -3,10 +3,26 @@ use std::fs::create_dir_all;
 
 use cosmwasm_schema::{export_schema, remove_schemas, schema_for};
 
+use clap::{App, Command, Parser};
+
+#[derive(Parser)] // requires `derive` feature
+#[clap(author, version, about, long_about = None)]
+enum Cli {
+    Schema(Schema),
+}
+
+#[derive(clap::Args)]
+#[clap(long_about = "Generates JSON schema of every contracts' interfaces")]
+struct Schema {}
+
 fn main() {
-    create_core_schemas();
-    create_oracle_schemas();
-    create_treasury_schemas();
+    match Cli::parse() {
+        Cli::Schema(_) => {
+            create_core_schemas();
+            create_oracle_schemas();
+            create_treasury_schemas();
+        }
+    }
 }
 
 fn create_core_schemas() {
@@ -26,7 +42,7 @@ fn create_core_schemas() {
 }
 
 fn create_oracle_schemas() {
-    use noi_oracle::msg::{CustomResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
+    use noi_oracle::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
     use noi_oracle::state::State;
 
     let mut out_dir = current_dir().unwrap();
@@ -38,7 +54,6 @@ fn create_oracle_schemas() {
     export_schema(&schema_for!(ExecuteMsg), &out_dir);
     export_schema(&schema_for!(QueryMsg), &out_dir);
     export_schema(&schema_for!(State), &out_dir);
-    export_schema(&schema_for!(CustomResponse), &out_dir);
 }
 
 fn create_treasury_schemas() {
