@@ -1,11 +1,10 @@
 use std::env::current_dir;
 use std::fs::create_dir_all;
 
+use clap::Parser;
 use cosmwasm_schema::{export_schema, remove_schemas, schema_for};
 
-use clap::{App, Command, Parser};
-
-#[derive(Parser)] // requires `derive` feature
+#[derive(clap::Parser)] // requires `derive` feature
 #[clap(author, version, about, long_about = None)]
 enum Cli {
     Schema(Schema),
