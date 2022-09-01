@@ -1,7 +1,7 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
 use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, StdResult, Uint128};
-use osmo_bindings_tokenfactory::OsmosisMsg;
+use osmo_bindings::OsmosisMsg;
 
 use noi_alias::Response;
 

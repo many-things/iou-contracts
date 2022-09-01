@@ -4,11 +4,9 @@ use serde::{Deserialize, Serialize};
 use cosmwasm_std::{
     to_binary, Addr, CustomQuery, Querier, QuerierWrapper, StdResult, WasmMsg, WasmQuery,
 };
+use noi_alias::CosmosMsg;
 
-use crate::{
-    msg::{ConfigResponse, ExecuteMsg, QueryMsg},
-    CosmosMsg,
-};
+use crate::msg::{ConfigResponse, ExecuteMsg, QueryMsg};
 
 /// NoiTreasury is a wrapper around Addr that provides a lot of helpers
 /// for working with this. Rename it to your contract name.

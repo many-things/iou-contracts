@@ -42,9 +42,9 @@ schemars = "0.8.8"
 serde = { version = "1.0.137", default-features = false, features = ["derive"] }
 thiserror = { version = "1.0.31" }
 
-osmo-bindings-tokenfactory = "0.6.0-p0mvn-v1"
+osmo-bindings = { git="https://github.com/osmosis-labs/bindings", rev="9b9278f" }
 
-noi-alias = { path = "../../crates/alias" }
+noi-alias = { path = "../../packages/alias" }
 
 [dev-dependencies]
 cosmwasm-schema = "1.0.0"
