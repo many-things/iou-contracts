@@ -1,12 +1,12 @@
 use cosmwasm_std::{to_binary, Binary, Order, StdError, StdResult};
 use cw_storage_plus::Bound;
-use noi_alias::{Deps, DEFAULT_LIMIT, MAX_LIMIT};
+use noi_alias::Deps;
 use noi_interface::{
     market::{
         GetConfigResponse, GetPositionResponse, GetStateResponse, ListPositionMsg,
         ListPositionResponse,
     },
-    RangeOrder,
+    RangeOrder, DEFAULT_LIMIT, MAX_LIMIT,
 };
 
 use crate::{
