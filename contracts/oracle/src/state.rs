@@ -13,4 +13,4 @@ pub struct Config {
     pub time_range: u64,
 }
 
-pub const CONFIG: Item<Config> = Item::new("config");
+pub const CONFIG: Item<Config> = Item::new("item::config");

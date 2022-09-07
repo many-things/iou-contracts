@@ -9,4 +9,4 @@ pub struct Config {
     pub denom: String,
 }
 
-pub const CONFIG: Item<Config> = Item::new("config");
+pub const CONFIG: Item<Config> = Item::new("item::config");
