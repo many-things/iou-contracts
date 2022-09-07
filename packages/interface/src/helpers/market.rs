@@ -1,12 +1,15 @@
 use cosmwasm_std::{
-    to_binary, Addr, CosmosMsg, CustomQuery, Empty, QuerierWrapper, StdResult, WasmMsg, WasmQuery,
+    to_binary, Addr, CosmosMsg, CustomQuery, Order, QuerierWrapper, StdResult, WasmMsg, WasmQuery,
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use crate::market::{
-    ExecuteMsg, GetConfigResponse, GetPositionResponse, GetStatusResponse, ListPosition,
-    ListPositionResponse, QueryMsg,
+use crate::{
+    market::{
+        ExecuteMsg, GetConfigResponse, GetPositionResponse, GetStateResponse, ListPositionMsg,
+        ListPositionResponse, QueryMsg,
+    },
+    RangeOrder,
 };
 
 /// NoiMarket is a wrapper around Addr that provides a lot of helpers
@@ -44,11 +47,11 @@ impl NoiMarket {
         )
     }
 
-    pub fn get_status<CQ>(&self, querier: &QuerierWrapper<CQ>) -> StdResult<GetStatusResponse>
+    pub fn get_status<CQ>(&self, querier: &QuerierWrapper<CQ>) -> StdResult<GetStateResponse>
     where
         CQ: CustomQuery,
     {
-        let msg = QueryMsg::GetStatus {};
+        let msg = QueryMsg::GetState {};
 
         querier.query(
             &WasmQuery::Smart {
@@ -59,11 +62,15 @@ impl NoiMarket {
         )
     }
 
-    pub fn get_position<CQ>(&self, querier: &QuerierWrapper<CQ>) -> StdResult<GetPositionResponse>
+    pub fn get_position<CQ>(
+        &self,
+        querier: &QuerierWrapper<CQ>,
+        position_id: u64,
+    ) -> StdResult<GetPositionResponse>
     where
         CQ: CustomQuery,
     {
-        let msg = QueryMsg::GetPosition {};
+        let msg = QueryMsg::GetPosition { position_id };
 
         querier.query(
             &WasmQuery::Smart {
@@ -77,12 +84,45 @@ impl NoiMarket {
     pub fn list_position<CQ>(
         &self,
         querier: &QuerierWrapper<CQ>,
-        opt: ListPosition,
+        start_after: Option<u64>,
+        limit: Option<u32>,
+        order: Option<Order>,
     ) -> StdResult<ListPositionResponse>
     where
         CQ: CustomQuery,
     {
-        let msg = QueryMsg::ListPosition(opt);
+        let msg = QueryMsg::ListPosition(ListPositionMsg::Default {
+            start_after,
+            limit,
+            order: order.map(RangeOrder::from),
+        });
+
+        querier.query(
+            &WasmQuery::Smart {
+                contract_addr: self.addr().into(),
+                msg: to_binary(&msg)?,
+            }
+            .into(),
+        )
+    }
+
+    pub fn list_position_by_owner<CQ>(
+        &self,
+        querier: &QuerierWrapper<CQ>,
+        owner: Addr,
+        start_after: Option<u64>,
+        limit: Option<u32>,
+        order: Option<Order>,
+    ) -> StdResult<ListPositionResponse>
+    where
+        CQ: CustomQuery,
+    {
+        let msg = QueryMsg::ListPosition(ListPositionMsg::ByOwner {
+            owner: owner.into_string(),
+            start_after,
+            limit,
+            order: order.map(RangeOrder::from),
+        });
 
         querier.query(
             &WasmQuery::Smart {
