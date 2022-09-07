@@ -1,13 +1,13 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "InstantiateMsg",
+  "title": "GetConfigResponse",
   "type": "object",
   "required": [
     "borrow_ltv",
     "collateral_asset",
     "core",
     "debt_asset",
-    "fee_base",
+    "fee_apy",
     "fee_multiplier",
     "oracle"
   ],
@@ -24,7 +24,7 @@
     "debt_asset": {
       "type": "string"
     },
-    "fee_base": {
+    "fee_apy": {
       "$ref": "#/definitions/Decimal"
     },
     "fee_multiplier": {

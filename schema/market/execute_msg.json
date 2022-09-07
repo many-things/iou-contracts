@@ -185,12 +185,6 @@
                     "null"
                   ]
                 },
-                "liquidator": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
                 "oracle": {
                   "type": [
                     "string",

@@ -17,10 +17,10 @@
     {
       "type": "object",
       "required": [
-        "get_status"
+        "get_state"
       ],
       "properties": {
-        "get_status": {
+        "get_state": {
           "type": "object"
         }
       },
@@ -33,7 +33,17 @@
       ],
       "properties": {
         "get_position": {
-          "type": "object"
+          "type": "object",
+          "required": [
+            "position_id"
+          ],
+          "properties": {
+            "position_id": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            }
+          }
         }
       },
       "additionalProperties": false
@@ -45,14 +55,14 @@
       ],
       "properties": {
         "list_position": {
-          "$ref": "#/definitions/ListPosition"
+          "$ref": "#/definitions/ListPositionMsg"
         }
       },
       "additionalProperties": false
     }
   ],
   "definitions": {
-    "ListPosition": {
+    "ListPositionMsg": {
       "oneOf": [
         {
           "type": "object",
@@ -61,7 +71,35 @@
           ],
           "properties": {
             "default": {
-              "type": "object"
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "format": "uint32",
+                  "minimum": 0.0
+                },
+                "order": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/definitions/RangeOrder"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "start_after": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "format": "uint64",
+                  "minimum": 0.0
+                }
+              }
             }
           },
           "additionalProperties": false
@@ -69,15 +107,56 @@
         {
           "type": "object",
           "required": [
-            "by_account"
+            "by_owner"
           ],
           "properties": {
-            "by_account": {
-              "type": "object"
+            "by_owner": {
+              "type": "object",
+              "required": [
+                "owner"
+              ],
+              "properties": {
+                "limit": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "format": "uint32",
+                  "minimum": 0.0
+                },
+                "order": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/definitions/RangeOrder"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "owner": {
+                  "type": "string"
+                },
+                "start_after": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "format": "uint64",
+                  "minimum": 0.0
+                }
+              }
             }
           },
           "additionalProperties": false
         }
+      ]
+    },
+    "RangeOrder": {
+      "type": "string",
+      "enum": [
+        "asc",
+        "desc"
       ]
     }
   }

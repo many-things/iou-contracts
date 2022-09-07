@@ -1,37 +1,21 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "InstantiateMsg",
+  "title": "GetRateResponse",
   "type": "object",
   "required": [
-    "borrow_ltv",
-    "collateral_asset",
-    "core",
-    "debt_asset",
-    "fee_base",
-    "fee_multiplier",
-    "oracle"
+    "base_asset",
+    "quote_asset",
+    "rate"
   ],
   "properties": {
-    "borrow_ltv": {
+    "base_asset": {
+      "type": "string"
+    },
+    "quote_asset": {
+      "type": "string"
+    },
+    "rate": {
       "$ref": "#/definitions/Decimal"
-    },
-    "collateral_asset": {
-      "type": "string"
-    },
-    "core": {
-      "type": "string"
-    },
-    "debt_asset": {
-      "type": "string"
-    },
-    "fee_base": {
-      "$ref": "#/definitions/Decimal"
-    },
-    "fee_multiplier": {
-      "$ref": "#/definitions/Decimal"
-    },
-    "oracle": {
-      "type": "string"
     }
   },
   "definitions": {

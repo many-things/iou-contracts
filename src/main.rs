@@ -25,7 +25,7 @@ fn main() {
 }
 
 fn create_core_schemas() {
-    use noi_interface::core::{ExecuteMsg, InstantiateMsg, QueryMsg};
+    use noi_interface::core::*;
 
     let mut out_dir = current_dir().unwrap();
     out_dir.push("schema/core");
@@ -38,7 +38,7 @@ fn create_core_schemas() {
 }
 
 fn create_market_schemas() {
-    use noi_interface::market::{ExecuteMsg, InstantiateMsg, QueryMsg};
+    use noi_interface::market::*;
 
     let mut out_dir = current_dir().unwrap();
     out_dir.push("schema/market");
@@ -48,10 +48,15 @@ fn create_market_schemas() {
     export_schema(&schema_for!(InstantiateMsg), &out_dir);
     export_schema(&schema_for!(ExecuteMsg), &out_dir);
     export_schema(&schema_for!(QueryMsg), &out_dir);
+
+    export_schema(&schema_for!(GetConfigResponse), &out_dir);
+    export_schema(&schema_for!(GetStateResponse), &out_dir);
+    export_schema(&schema_for!(GetPositionResponse), &out_dir);
+    export_schema(&schema_for!(ListPositionResponse), &out_dir);
 }
 
 fn create_oracle_schemas() {
-    use noi_interface::oracle::{ExecuteMsg, InstantiateMsg, QueryMsg};
+    use noi_interface::oracle::*;
 
     let mut out_dir = current_dir().unwrap();
     out_dir.push("schema/oracle");
@@ -61,10 +66,13 @@ fn create_oracle_schemas() {
     export_schema(&schema_for!(InstantiateMsg), &out_dir);
     export_schema(&schema_for!(ExecuteMsg), &out_dir);
     export_schema(&schema_for!(QueryMsg), &out_dir);
+
+    export_schema(&schema_for!(GetConfigResponse), &out_dir);
+    export_schema(&schema_for!(GetRateResponse), &out_dir);
 }
 
 fn create_treasury_schemas() {
-    use noi_interface::treasury::{ConfigResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
+    use noi_interface::treasury::*;
 
     let mut out_dir = current_dir().unwrap();
     out_dir.push("schema/treasury");
@@ -74,5 +82,6 @@ fn create_treasury_schemas() {
     export_schema(&schema_for!(InstantiateMsg), &out_dir);
     export_schema(&schema_for!(ExecuteMsg), &out_dir);
     export_schema(&schema_for!(QueryMsg), &out_dir);
+
     export_schema(&schema_for!(ConfigResponse), &out_dir);
 }
