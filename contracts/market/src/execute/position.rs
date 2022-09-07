@@ -69,7 +69,7 @@ pub fn close(
 pub fn liquidate(
     deps: DepsMut,
     env: Env,
-    info: MessageInfo,
+    _info: MessageInfo,
     position_id: u64,
 ) -> Result<Response, ContractError> {
     let config = Config::load(deps.storage)?;
@@ -89,7 +89,7 @@ pub fn liquidate(
     state.save(deps.storage)?;
 
     let after_liquidation = NoiCore(config.core).call(core::InternalMsg::AfterLiquidation {
-        owner: position.owner.into_string(),
+        owner: position.owner.to_string(),
         asset: config.collateral_asset,
         collateral: position.collateral,
         debt: position.debt,
@@ -97,9 +97,10 @@ pub fn liquidate(
 
     Ok(Response::new()
         .add_attribute("action", "liquidate")
-        .add_attribute("position", position_id.to_string())
-        .add_attribute("collateral", "")
-        .add_attribute("debt", "")
+        .add_attribute("owner", position.owner.into_string())
+        .add_attribute("position_id", position_id.to_string())
+        .add_attribute("collateral", position.collateral.to_string())
+        .add_attribute("debt", position.debt.to_string())
         .add_attribute("rate", rate.to_string())
         .add_message(after_liquidation))
 }
