@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InstantiateMsg",
+  "type": "object",
+  "required": [
+    "base_asset",
+    "gov",
+    "pool_id",
+    "quote_asset",
+    "time_range"
+  ],
+  "properties": {
+    "base_asset": {
+      "type": "string"
+    },
+    "gov": {
+      "type": "string"
+    },
+    "pool_id": {
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0.0
+    },
+    "quote_asset": {
+      "type": "string"
+    },
+    "time_range": {
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0.0
+    }
+  }
+}

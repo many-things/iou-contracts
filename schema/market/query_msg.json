@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QueryMsg",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "get_config"
+      ],
+      "properties": {
+        "get_config": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "get_status"
+      ],
+      "properties": {
+        "get_status": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "get_position"
+      ],
+      "properties": {
+        "get_position": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "list_position"
+      ],
+      "properties": {
+        "list_position": {
+          "$ref": "#/definitions/ListPosition"
+        }
+      },
+      "additionalProperties": false
+    }
+  ],
+  "definitions": {
+    "ListPosition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "default"
+          ],
+          "properties": {
+            "default": {
+              "type": "object"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "by_account"
+          ],
+          "properties": {
+            "by_account": {
+              "type": "object"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

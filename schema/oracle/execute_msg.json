@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExecuteMsg",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "update_gov"
+      ],
+      "properties": {
+        "update_gov": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "update_pool"
+      ],
+      "properties": {
+        "update_pool": {
+          "$ref": "#/definitions/UpdatePoolMsg"
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "adjust_time_range"
+      ],
+      "properties": {
+        "adjust_time_range": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0.0
+        }
+      },
+      "additionalProperties": false
+    }
+  ],
+  "definitions": {
+    "UpdatePoolMsg": {
+      "type": "object",
+      "required": [
+        "base_asset",
+        "pool_id",
+        "quote_asset"
+      ],
+      "properties": {
+        "base_asset": {
+          "type": "string"
+        },
+        "pool_id": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0.0
+        },
+        "quote_asset": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

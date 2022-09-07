@@ -41,7 +41,7 @@ fn create_market_schemas() {
     use noi_interface::market::{ExecuteMsg, InstantiateMsg, QueryMsg};
 
     let mut out_dir = current_dir().unwrap();
-    out_dir.push("schema/oracle");
+    out_dir.push("schema/market");
     create_dir_all(&out_dir).unwrap();
     remove_schemas(&out_dir).unwrap();
 
