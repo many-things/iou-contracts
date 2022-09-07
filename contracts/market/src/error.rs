@@ -35,4 +35,7 @@ pub enum ContractError {
 
     #[error("not liquidatable")]
     NotLiquidatable {},
+
+    #[error("oversized request. size: {size:?}, max: {max:?}")]
+    OversizedRequest { size: u64, max: u64 },
 }

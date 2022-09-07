@@ -22,7 +22,6 @@ pub fn instantiate(
     Config {
         core: deps.api.addr_validate(&msg.core)?,
         oracle: deps.api.addr_validate(&msg.oracle)?,
-        liquidator: deps.api.addr_validate(&msg.liquidator)?,
 
         debt_asset: msg.debt_asset,
         collateral_asset: msg.collateral_asset,
@@ -80,14 +79,15 @@ pub fn execute(
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(_deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    use crate::query;
     use QueryMsg::*;
 
     match msg {
-        GetConfig {} => todo!(),
-        GetStatus {} => todo!(),
-        GetPosition {} => todo!(),
-        ListPosition(_) => todo!(),
+        GetConfig {} => query::get_config(deps),
+        GetState {} => query::get_state(deps),
+        GetPosition { position_id } => query::get_position(deps, position_id),
+        ListPosition(opt) => query::list_position(deps, opt),
     }
 }
 

@@ -18,7 +18,6 @@ pub const IDX_POSITION_BY_OWNER: Map<(&Addr, u64), Empty> = Map::new("map::idx_p
 pub struct Config {
     pub core: Addr,
     pub oracle: Addr,
-    pub liquidator: Addr,
 
     pub debt_asset: String,
     pub collateral_asset: String,

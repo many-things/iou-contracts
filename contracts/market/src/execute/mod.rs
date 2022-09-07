@@ -31,19 +31,12 @@ pub fn config(
         .save(deps.storage)?;
 
     match msg {
-        ConfigMsg::ManageRoles {
-            core,
-            oracle,
-            liquidator,
-        } => {
+        ConfigMsg::ManageRoles { core, oracle } => {
             if let Some(core) = core {
                 config.core = deps.api.addr_validate(&core)?;
             }
             if let Some(oracle) = oracle {
                 config.oracle = deps.api.addr_validate(&oracle)?;
-            }
-            if let Some(liquidator) = liquidator {
-                config.liquidator = deps.api.addr_validate(&liquidator)?;
             }
         }
         ConfigMsg::AdjustLTV { borrow_ltv } => {
