@@ -527,6 +527,8 @@ dependencies = [
  "clap",
  "cosmwasm-schema",
  "noi-core",
+ "noi-interface",
+ "noi-market",
  "noi-oracle",
  "noi-treasury",
 ]
@@ -541,6 +543,42 @@ dependencies = [
  "cw-multi-test",
  "cw-storage-plus",
  "cw2",
+ "noi-interface",
+ "schemars",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
+name = "noi-interface"
+version = "0.1.0"
+dependencies = [
+ "cosmwasm-schema",
+ "cosmwasm-std",
+ "cosmwasm-storage",
+ "cw-multi-test",
+ "cw-storage-plus",
+ "cw2",
+ "noi-alias",
+ "osmo-bindings",
+ "schemars",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
+name = "noi-market"
+version = "0.1.0"
+dependencies = [
+ "cosmwasm-schema",
+ "cosmwasm-std",
+ "cosmwasm-storage",
+ "cw-multi-test",
+ "cw-storage-plus",
+ "cw-utils",
+ "cw2",
+ "noi-alias",
+ "noi-interface",
  "schemars",
  "serde",
  "thiserror",
@@ -556,6 +594,9 @@ dependencies = [
  "cw-multi-test",
  "cw-storage-plus",
  "cw2",
+ "noi-alias",
+ "noi-interface",
+ "osmo-bindings",
  "schemars",
  "serde",
  "thiserror",
@@ -573,6 +614,7 @@ dependencies = [
  "cw-utils",
  "cw2",
  "noi-alias",
+ "noi-interface",
  "osmo-bindings",
  "schemars",
  "serde",

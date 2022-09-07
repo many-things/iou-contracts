@@ -14,8 +14,10 @@ edition = "2018"
 
 [dependencies]
 noi-core = { path = "./contracts/core" }
+noi-market = { path = "./contracts/market" }
 noi-oracle = { path = "./contracts/oracle" }
 noi-treasury = { path = "./contracts/treasury" }
+noi-interface = { path = "./packages/interface" }
 
 cosmwasm-schema = "1.0.0"
 clap = { version = "3.2.19", features = ["derive"] }
