@@ -45,6 +45,7 @@ thiserror = { version = "1.0.31" }
 osmo-bindings = { git="https://github.com/osmosis-labs/bindings", rev="9b9278f" }
 
 noi-alias = { path = "../../packages/alias" }
+noi-interface = { path = "../../packages/interface" }
 
 [dev-dependencies]
 cosmwasm-schema = "1.0.0"
