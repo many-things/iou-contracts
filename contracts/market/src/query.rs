@@ -18,10 +18,14 @@ pub fn get_config(deps: Deps) -> StdResult<Binary> {
     let config = Config::load(deps.storage)?;
 
     to_binary(&GetConfigResponse {
+        name: config.name,
+
         core: config.core.into_string(),
         oracle: config.oracle.into_string(),
+
         debt_asset: config.debt_asset,
         collateral_asset: config.collateral_asset,
+
         borrow_ltv: config.borrow_ltv,
         fee_multiplier: config.fee_multiplier.clone(),
         fee_apy: config.fee_multiplier.checked_pow(86400 * 365)?, // 1y,
@@ -63,30 +67,22 @@ pub fn list_position(deps: Deps, opt: ListPositionMsg) -> StdResult<Binary> {
             limit,
             order,
         } => {
-            let limit = get_and_check_limit(limit, MAX_LIMIT, DEFAULT_LIMIT)? as usize;
-            let order = order.unwrap_or(RangeOrder::Asc).into();
-            let (min, max) = match order {
-                Order::Ascending => (start_after.map(Bound::exclusive), None),
-                Order::Descending => (None, start_after.map(Bound::exclusive)),
-            };
+            let responses: StdResult<Vec<GetPositionResponse>> =
+                Position::list(deps.storage, start_after, limit, order)?
+                    .iter()
+                    .map(|(id, position)| {
+                        let position_with_fee =
+                            position.clone().apply_fee(state.global_fee_index)?;
 
-            let responses: StdResult<Vec<GetPositionResponse>> = Position::raw_map()
-                .range(deps.storage, min, max, order)
-                .take(limit)
-                .map(|item| {
-                    let (id, position) = item?;
-
-                    let position_with_fee = position.clone().apply_fee(state.global_fee_index)?;
-
-                    Ok(GetPositionResponse {
-                        id,
-                        owner: position.owner.into_string(),
-                        collateral: position.collateral,
-                        debt: position.debt,
-                        pending_fee: position_with_fee.debt.checked_sub(position.debt)?,
+                        Ok(GetPositionResponse {
+                            id: *id,
+                            owner: position.owner.to_string(),
+                            collateral: position.collateral,
+                            debt: position.debt,
+                            pending_fee: position_with_fee.debt.checked_sub(position.debt)?,
+                        })
                     })
-                })
-                .collect();
+                    .collect();
 
             to_binary(&ListPositionResponse(responses?))
         }
@@ -96,53 +92,25 @@ pub fn list_position(deps: Deps, opt: ListPositionMsg) -> StdResult<Binary> {
             limit,
             order,
         } => {
-            let limit = get_and_check_limit(limit, MAX_LIMIT, DEFAULT_LIMIT)? as usize;
-            let order = order.unwrap_or(RangeOrder::Asc).into();
-            let (min, max) = match order {
-                Order::Ascending => (start_after.map(Bound::exclusive), None),
-                Order::Descending => (None, start_after.map(Bound::exclusive)),
-            };
-
             let owner = deps.api.addr_validate(&owner)?;
-            let responses: StdResult<Vec<GetPositionResponse>> = Position::raw_idx_owner()
-                .prefix(&owner)
-                .keys(deps.storage, min, max, order)
-                .take(limit)
-                .map(|item| {
-                    let position_id = item?;
-                    let position = Position::load(deps.storage, position_id)?;
-                    let position_with_fee = position.clone().apply_fee(state.global_fee_index)?;
+            let responses: StdResult<Vec<GetPositionResponse>> =
+                Position::list_by_owner(deps.storage, &owner, start_after, limit, order)?
+                    .iter()
+                    .map(|(id, position)| {
+                        let position_with_fee =
+                            position.clone().apply_fee(state.global_fee_index)?;
 
-                    Ok(GetPositionResponse {
-                        id: position_id,
-                        owner: position.owner.into_string(),
-                        collateral: position.collateral,
-                        debt: position.debt,
-                        pending_fee: position_with_fee.debt.checked_sub(position.debt)?,
+                        Ok(GetPositionResponse {
+                            id: *id,
+                            owner: position.owner.to_string(),
+                            collateral: position.collateral,
+                            debt: position.debt,
+                            pending_fee: position_with_fee.debt.checked_sub(position.debt)?,
+                        })
                     })
-                })
-                .collect();
+                    .collect();
 
             to_binary(&ListPositionResponse(responses?))
         }
-    }
-}
-
-fn get_and_check_limit(limit: Option<u32>, max: u32, default: u32) -> StdResult<u32> {
-    match limit {
-        Some(l) => {
-            if l <= max {
-                Ok(l)
-            } else {
-                Err(StdError::generic_err(
-                    ContractError::OversizedRequest {
-                        size: l as u64,
-                        max: max as u64,
-                    }
-                    .to_string(),
-                ))
-            }
-        }
-        None => Ok(default),
     }
 }

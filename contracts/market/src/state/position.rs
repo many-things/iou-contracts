@@ -1,8 +1,9 @@
-use cw_storage_plus::{Item, Map};
+use cw_storage_plus::{Bound, Item, Map};
+use noi_interface::{get_and_check_limit, RangeOrder, DEFAULT_LIMIT, MAX_LIMIT};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use cosmwasm_std::{Addr, Decimal, Empty, StdResult, Storage, Uint128};
+use cosmwasm_std::{Addr, Decimal, Empty, Order, StdResult, Storage, Uint128};
 
 use crate::ContractError;
 
@@ -77,6 +78,51 @@ impl Position {
 
     pub fn load(storage: &dyn Storage, position_id: u64) -> StdResult<Self> {
         POSITIONS.load(storage, position_id)
+    }
+
+    pub fn list(
+        storage: &dyn Storage,
+        start_after: Option<u64>,
+        limit: Option<u32>,
+        order: Option<RangeOrder>,
+    ) -> StdResult<Vec<(u64, Self)>> {
+        let limit = get_and_check_limit(limit, MAX_LIMIT, DEFAULT_LIMIT)? as usize;
+        let order = order.unwrap_or(RangeOrder::Asc).into();
+        let (min, max) = match order {
+            Order::Ascending => (start_after.map(Bound::exclusive), None),
+            Order::Descending => (None, start_after.map(Bound::exclusive)),
+        };
+
+        POSITIONS
+            .range(storage, min, max, order)
+            .take(limit)
+            .collect()
+    }
+
+    pub fn list_by_owner(
+        storage: &dyn Storage,
+        owner: &Addr,
+        start_after: Option<u64>,
+        limit: Option<u32>,
+        order: Option<RangeOrder>,
+    ) -> StdResult<Vec<(u64, Self)>> {
+        let limit = get_and_check_limit(limit, MAX_LIMIT, DEFAULT_LIMIT)? as usize;
+        let order = order.unwrap_or(RangeOrder::Asc).into();
+        let (min, max) = match order {
+            Order::Ascending => (start_after.map(Bound::exclusive), None),
+            Order::Descending => (None, start_after.map(Bound::exclusive)),
+        };
+
+        IDX_POSITION_BY_OWNER
+            .prefix(owner)
+            .keys(storage, min, max, order)
+            .take(limit)
+            .map(|item| {
+                let position_id = item?;
+                let position = Position::load(storage, position_id)?;
+                Ok((position_id, position))
+            })
+            .collect()
     }
 
     pub fn apply_fee(mut self, global_fee_index: Decimal) -> StdResult<Self> {

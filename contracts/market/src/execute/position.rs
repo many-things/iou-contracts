@@ -1,4 +1,4 @@
-use cosmwasm_std::{coins, BankMsg, Env, MessageInfo, Uint128};
+use cosmwasm_std::{attr, coins, BankMsg, Env, MessageInfo, Uint128};
 use noi_alias::{DepsMut, Response};
 use noi_interface::{
     core,
@@ -25,10 +25,18 @@ pub fn open(deps: DepsMut, env: Env, info: MessageInfo) -> Result<Response, Cont
     }
     .save(deps.storage)?;
 
+    let callback = NoiCore(config.core).call(core::CallbackMsg::Open {
+        owner: info.sender.to_string(),
+        position_id,
+    })?;
+
     Ok(Response::new()
-        .add_attribute("action", "open")
-        .add_attribute("owner", info.sender)
-        .add_attribute("position_id", position_id.to_string()))
+        .add_attributes(vec![
+            attr("action", "open"),
+            attr("owner", info.sender.into_string()),
+            attr("position_id", position_id.to_string()),
+        ])
+        .add_message(callback))
 }
 
 pub fn close(
@@ -59,11 +67,19 @@ pub fn close(
         amount: coins(position.collateral.u128(), config.collateral_asset),
     };
 
+    let callback = NoiCore(config.core).call(core::CallbackMsg::Close {
+        owner: position.owner.into_string(),
+        position_id,
+    })?;
+
     Ok(Response::new()
-        .add_attribute("action", "close")
-        .add_attribute("owner", info.sender.into_string())
-        .add_attribute("position_id", position_id.to_string())
-        .add_message(return_msg))
+        .add_attributes(vec![
+            attr("action", "close"),
+            attr("owner", info.sender.into_string()),
+            attr("position_id", position_id.to_string()),
+        ])
+        .add_message(return_msg)
+        .add_message(callback))
 }
 
 pub fn liquidate(
@@ -88,7 +104,7 @@ pub fn liquidate(
     state.total_debt = state.total_debt.checked_sub(position.debt)?;
     state.save(deps.storage)?;
 
-    let after_liquidation = NoiCore(config.core).call(core::InternalMsg::AfterLiquidation {
+    let callback = NoiCore(config.core).call(core::CallbackMsg::Liquidation {
         owner: position.owner.to_string(),
         asset: config.collateral_asset,
         collateral: position.collateral,
@@ -96,11 +112,13 @@ pub fn liquidate(
     })?;
 
     Ok(Response::new()
-        .add_attribute("action", "liquidate")
-        .add_attribute("owner", position.owner.into_string())
-        .add_attribute("position_id", position_id.to_string())
-        .add_attribute("collateral", position.collateral.to_string())
-        .add_attribute("debt", position.debt.to_string())
-        .add_attribute("rate", rate.to_string())
-        .add_message(after_liquidation))
+        .add_attributes(vec![
+            attr("action", "liquidate"),
+            attr("owner", position.owner.into_string()),
+            attr("position_id", position_id.to_string()),
+            attr("collateral", position.collateral.to_string()),
+            attr("debt", position.debt.to_string()),
+            attr("rate", rate.to_string()),
+        ])
+        .add_message(callback))
 }

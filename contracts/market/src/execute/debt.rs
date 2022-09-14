@@ -1,4 +1,4 @@
-use cosmwasm_std::{Env, MessageInfo, Uint128};
+use cosmwasm_std::{attr, Env, MessageInfo, Uint128};
 use noi_alias::{DepsMut, Response};
 use noi_interface::{
     core,
@@ -39,17 +39,20 @@ pub fn borrow(
     state.total_debt = state.total_debt.checked_add(amount)?;
     state.save(deps.storage)?;
 
-    let callback = NoiCore(config.core).call(core::InternalMsg::AfterBorrowing {
-        to: info.sender.to_string(),
+    let callback = NoiCore(config.core).call(core::CallbackMsg::Borrow {
+        owner: position.owner.into_string(),
+        position_id,
         amount,
     })?;
 
     Ok(Response::new()
-        .add_attribute("action", "borrow")
-        .add_attribute("owner", info.sender.into_string())
-        .add_attribute("position_id", position_id.to_string())
-        .add_attribute("amount", amount.to_string())
-        .add_attribute("rate", rate.to_string())
+        .add_attributes(vec![
+            attr("action", "borrow"),
+            attr("owner", info.sender.into_string()),
+            attr("position_id", position_id.to_string()),
+            attr("amount", amount.to_string()),
+            attr("rate", rate.to_string()),
+        ])
         .add_message(callback))
 }
 
@@ -81,16 +84,19 @@ pub fn repay(
     state.save(deps.storage)?;
 
     let rate = NoiOracle(config.oracle).get_rate(&deps.querier)?.rate;
-    let callback = NoiCore(config.core).call(core::InternalMsg::AfterRepaying {
-        from: info.sender.to_string(),
+    let callback = NoiCore(config.core).call(core::CallbackMsg::Repay {
+        owner: position.owner.into_string(),
         amount: received,
+        position_id,
     })?;
 
     Ok(Response::new()
-        .add_attribute("action", "repay")
-        .add_attribute("owner", info.sender.into_string())
-        .add_attribute("position_id", position_id.to_string())
-        .add_attribute("amount", received.to_string())
-        .add_attribute("rate", rate.to_string())
+        .add_attributes(vec![
+            attr("action", "repay"),
+            attr("owner", info.sender.into_string()),
+            attr("position_id", position_id.to_string()),
+            attr("amount", received.to_string()),
+            attr("rate", rate.to_string()),
+        ])
         .add_message(callback))
 }

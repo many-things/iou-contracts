@@ -1,6 +1,9 @@
-use cosmwasm_std::{Env, MessageInfo, Uint128};
+use cosmwasm_std::{attr, Env, MessageInfo, Uint128};
 use noi_alias::{DepsMut, Response};
-use noi_interface::helpers::NoiOracle;
+use noi_interface::{
+    core,
+    helpers::{NoiCore, NoiOracle},
+};
 
 use crate::{
     state::{Config, Position, State},
@@ -32,11 +35,20 @@ pub fn lock(
     state.total_collateral = state.total_collateral.checked_add(received)?;
     state.save(deps.storage)?;
 
+    let callback = NoiCore(config.core).call(core::CallbackMsg::Lock {
+        owner: position.owner.into_string(),
+        position_id,
+        amount: received,
+    })?;
+
     Ok(Response::new()
-        .add_attribute("action", "lock")
-        .add_attribute("owner", info.sender.into_string())
-        .add_attribute("position_id", position_id.to_string())
-        .add_attribute("amount", received.to_string()))
+        .add_attributes(vec![
+            attr("action", "lock"),
+            attr("owner", info.sender.into_string()),
+            attr("position_id", position_id.to_string()),
+            attr("amount", received.to_string()),
+        ])
+        .add_message(callback))
 }
 
 pub fn unlock(
@@ -68,10 +80,19 @@ pub fn unlock(
     state.total_collateral = state.total_collateral.checked_sub(amount)?;
     state.save(deps.storage)?;
 
+    let callback = NoiCore(config.core).call(core::CallbackMsg::Unlock {
+        owner: position.owner.into_string(),
+        position_id,
+        amount,
+    })?;
+
     Ok(Response::new()
-        .add_attribute("action", "unlock")
-        .add_attribute("owner", info.sender.into_string())
-        .add_attribute("position_id", position_id.to_string())
-        .add_attribute("amount", amount.to_string())
-        .add_attribute("rate", rate.to_string()))
+        .add_attributes(vec![
+            attr("action", "unlock"),
+            attr("owner", info.sender.into_string()),
+            attr("position_id", position_id.to_string()),
+            attr("amount", amount.to_string()),
+            attr("rate", rate.to_string()),
+        ])
+        .add_message(callback))
 }

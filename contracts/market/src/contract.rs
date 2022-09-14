@@ -1,7 +1,7 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{Binary, Env, MessageInfo, StdResult, Uint128};
-use noi_alias::{Deps, DepsMut, Response};
+use cosmwasm_std::{Binary, Env, MessageInfo, StdResult, Uint128, WasmMsg};
+use noi_alias::{CosmosMsg, Deps, DepsMut, Response};
 use noi_interface::market::{ExecuteMsg, InstantiateMsg, QueryMsg};
 
 use crate::error::ContractError;
@@ -20,8 +20,11 @@ pub fn instantiate(
     cw2::set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
 
     Config {
+        name: msg.name,
+
         core: deps.api.addr_validate(&msg.core)?,
         oracle: deps.api.addr_validate(&msg.oracle)?,
+        liquidator: deps.api.addr_validate(&msg.liquidator)?,
 
         debt_asset: msg.debt_asset,
         collateral_asset: msg.collateral_asset,

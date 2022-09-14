@@ -30,8 +30,10 @@ pub fn config(
         .update_fee(&env.block.time, config.fee_multiplier)?
         .save(deps.storage)?;
 
+    use ConfigMsg::*;
     match msg {
-        ConfigMsg::ManageRoles { core, oracle } => {
+        ChangeName(new_name) => config.name = new_name,
+        ManageRoles { core, oracle } => {
             if let Some(core) = core {
                 config.core = deps.api.addr_validate(&core)?;
             }
@@ -39,12 +41,12 @@ pub fn config(
                 config.oracle = deps.api.addr_validate(&oracle)?;
             }
         }
-        ConfigMsg::AdjustLTV { borrow_ltv } => {
+        AdjustLTV { borrow_ltv } => {
             if let Some(borrow_ltv) = borrow_ltv {
                 config.borrow_ltv = borrow_ltv;
             }
         }
-        ConfigMsg::AdjustFeeMultiplier(fee_multiplier) => {
+        AdjustFeeMultiplier(fee_multiplier) => {
             config.fee_multiplier = fee_multiplier;
         }
     }
