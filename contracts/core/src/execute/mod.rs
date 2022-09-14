@@ -11,12 +11,10 @@ pub use crate::execute::callback::handle_callback_msg;
 pub use crate::execute::market::handle_market_msg;
 
 pub fn config(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    msg: ConfigMsg,
+    _deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    _msg: ConfigMsg,
 ) -> Result<Response, ContractError> {
-    match msg {
-        _ => Ok(Response::new()),
-    }
+    unimplemented!()
 }

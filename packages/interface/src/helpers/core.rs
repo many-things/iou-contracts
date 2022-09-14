@@ -1,11 +1,8 @@
-use cosmwasm_std::{
-    to_binary, Addr, Coin, CosmosMsg, CustomQuery, Querier, QuerierWrapper, StdResult, WasmMsg,
-    WasmQuery,
-};
+use cosmwasm_std::{to_binary, Addr, Coin, CosmosMsg, StdResult, WasmMsg};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use crate::core::{ExecuteMsg, QueryMsg};
+use crate::core::ExecuteMsg;
 
 /// NoiCore is a wrapper around Addr that provides a lot of helpers
 /// for working with this.

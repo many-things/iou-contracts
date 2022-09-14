@@ -1,6 +1,6 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{coins, to_binary, Addr, Binary, Env, MessageInfo, Reply, StdError, WasmMsg};
+use cosmwasm_std::{coins, to_binary, Addr, Binary, Env, MessageInfo, Reply, WasmMsg};
 
 use noi_alias::{Deps, DepsMut, Response, SubMsg};
 use noi_interface::{

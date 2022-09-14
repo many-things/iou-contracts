@@ -5,10 +5,10 @@ use noi_interface::core::CallbackMsg;
 use crate::ContractError;
 
 pub fn handle_callback_msg(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    msg: CallbackMsg,
+    _deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    _msg: CallbackMsg,
 ) -> Result<Response, ContractError> {
     unimplemented!()
 }
