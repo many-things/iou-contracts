@@ -7,9 +7,12 @@ use crate::RangeOrder;
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub struct InstantiateMsg {
+    pub name: String,
+
     // addr
     pub core: String,
     pub oracle: String,
+    pub liquidator: String,
 
     // denom
     pub debt_asset: String,
@@ -24,6 +27,7 @@ pub struct InstantiateMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ConfigMsg {
+    ChangeName(String),
     ManageRoles {
         core: Option<String>,
         oracle: Option<String>,
@@ -77,6 +81,8 @@ pub enum QueryMsg {
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct GetConfigResponse {
+    pub name: String,
+
     pub core: String,
     pub oracle: String,
 

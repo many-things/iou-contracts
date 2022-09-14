@@ -5,13 +5,29 @@ pub mod market;
 pub mod oracle;
 pub mod treasury;
 
-use cosmwasm_std::Order;
+use cosmwasm_std::{Order, StdError, StdResult};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // Settings for pagination
 pub const MAX_LIMIT: u32 = 30;
 pub const DEFAULT_LIMIT: u32 = 10;
+
+pub fn get_and_check_limit(limit: Option<u32>, max: u32, default: u32) -> StdResult<u32> {
+    match limit {
+        Some(l) => {
+            if l <= max {
+                Ok(l)
+            } else {
+                Err(StdError::generic_err(format!(
+                    "oversized request. size: {:?}, max: {:?}",
+                    l as u64, max as u64,
+                )))
+            }
+        }
+        None => Ok(default),
+    }
+}
 
 #[derive(Serialize, Deserialize, Clone, Eq, PartialEq, JsonSchema, Debug)]
 #[serde(rename_all = "snake_case")]
